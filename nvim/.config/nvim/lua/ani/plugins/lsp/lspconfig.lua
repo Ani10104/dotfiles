@@ -108,6 +108,33 @@ return {
 				},
 			},
 			}
+		lspconfig['harper_ls'].setup {
+			capabilities = capabilities,
+			settings = {
+				["harper-ls"] = {
+					linters = {
+						spell_check = true,
+						spelled_numbers = true,
+						an_a = true,
+						sentence_capitalization = true,
+						unclosed_quotes = true,
+						wrong_quotes = true,
+						long_sentences = true,
+						repeated_words = true,
+						spaces = true,
+						matcher = true,
+						correct_number_suffix = true,
+						number_suffix_capitalization = true,
+						multiple_sequential_pronouns = true,
+					},
+					-- Enable code actions for quick fixes
+					codeActions = true,
+					-- Set diagnostic severity (you can use "error", "warning", "information", or "hint")
+					diagnosticSeverity = "information",
+				}
+			},
+			filetypes = { "tex", "latex", "org", "markdown", "text" },
+		}
 
 			-- configure python server
 			-- lspconfig['pyright'].setup {

@@ -168,19 +168,6 @@
 (setenv "LANG" "en_US.UTF-8")
 
 
-;; Org Plain Latex file
-
-(with-eval-after-load 'ox-latex
-  (add-to-list 'org-latex-classes
-               '("org-plain-latex"
-                 "\\documentclass[a4paper, 12pt]{report}"
-                 ("\\chapter{%s}" . "\\chapter*{\texorpdfstring{\color[HTML]{AE0000}%s}{%s}}")      ; *       → \chapter
-                 ("\\section{%s}" . "\\section*{%s}")      ; **      → \section
-                 ("\\subsection{%s}" . "\\subsection*{%s}") ; ***     → \subsection
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}") ; ****  → \subsubsection
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")  ; *****   → \paragraph
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))) ; ****** → \subparagraph
-
 (use-package! autoinsert
   :defer nil  ;; load immediately
   :config
@@ -241,10 +228,32 @@
   (map! :map org-mode-map
         :localleader
         "n" #'my/org-cycle-list-number-style))
+;;; ~/.doom.d/config.el
 
+;; Use 4 headline levels during LaTeX export
+(after! org
+  (setq org-export-headline-levels 5)
+  (setq org-latex-default-packages-alist nil) ; Remove default packages
+  (setq org-latex-hyperref-template "")       ; Disable hyperref metadata
 
+  ;; Define barebones LaTeX class
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+                 '("barebones"
+                   "\\documentclass{report}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]"
+                   ("\\chapter{%s}" . "\\chapter*{%s}")
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")))))
 
-;; Auto create Latex Project
-(use-package! latex-project
-  :load-path "~/.doom.d/lib"
-  :commands create-latex-project)
+;; Remove auto-generated \label{sec:orgxxxxxx} in LaTeX export
+(with-eval-after-load 'ox
+  (defun my-latex-filter-removeOrgAutoLabels (text backend info)
+    "Remove Org-generated labels like \\label{sec:org123abc} from LaTeX output."
+    (when (org-export-derived-backend-p backend 'latex)
+      (replace-regexp-in-string "\\\\label{sec:org[0-9a-f]+}\\(?:\n\\)?" "" text)))
+
+  (add-to-list 'org-export-filter-headline-functions
+               #'my-latex-filter-removeOrgAutoLabels))
+

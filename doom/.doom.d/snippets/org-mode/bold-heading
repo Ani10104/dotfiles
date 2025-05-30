@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: bold heading in level four
+# key: ****
+# --
+**** *${1:heading text}:* $0

@@ -26,3 +26,14 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     vim.api.nvim_set_hl(0, "texStyleItal", { fg = "#f7e3db", bold = false })
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "tex", "latex", "org" },
+  callback = function()
+    vim.lsp.start({
+      name = "harper-ls",
+      cmd = { "harper-ls", "--stdio" },
+      root_dir = vim.fn.getcwd(),
+    })
+  end,
+})

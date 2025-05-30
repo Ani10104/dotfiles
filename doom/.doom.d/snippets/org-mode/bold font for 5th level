@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: bold font in 5th level
+# key: *****
+# --
+***** *${1:heading text}* $0
