@@ -43,6 +43,15 @@ end, { desc = "Snacks: Render inline math" })
 map('n', '<leader>fk', function()
 	Snacks.picker.keymaps { layout = 'ivy' }
 end, { desc = 'keymaps' })
+--
+-- Zenmode
+map('n', '<leader>z', function()
+  require('snacks').zen()
+end, { desc = 'Toggle Zen Mode' })
+
+--diagnostic
+map("n", "<leader>sc",function() Snacks.picker.diagnostics() end, { desc = "Diagnostics" })
+
 map("n", "<leader>vd", "<Plug>(vimtex-env-delete)", { desc = "Delete LaTeX Environment" })
 
 -- Function to toggle all folds

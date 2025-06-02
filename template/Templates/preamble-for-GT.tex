@@ -1,0 +1,65 @@
+% ==========================================
+% Standalone Preamble File: preamble.tex
+% Contains all LaTeX configurations
+% ==========================================
+
+% --- Document Class & Basic Setup ---
+\documentclass[12pt]{report}
+
+% --- Geometry & Page Layout ---
+\usepackage[a4paper, total={170mm,257mm}, left=20mm, top=20mm, right=20mm, bottom=23mm]{geometry}
+\usepackage{pgfpages}
+\pgfpagesdeclarelayout{boxed}{
+    \edef\pgfpageoptionborder{0pt}
+}{
+    \pgfpagesphysicalpageoptions{logical pages=1}
+    \pgfpageslogicalpageoptions{1}{
+        border code=\pgfsetlinewidth{2pt}\pgfstroke,
+        border shrink=\pgfpageoptionborder,
+        resized width=.95\pgfphysicalwidth,
+        resized height=.95\pgfphysicalheight,
+        center=\pgfpoint{.5\pgfphysicalwidth}{.5\pgfphysicalheight}
+    }
+}
+\pgfpagesuselayout{boxed}
+
+% --- Graphics & Figures ---
+\usepackage{tikz, pgfplots}
+\usetikzlibrary{positioning, shapes, arrows}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx, float, subfig, wrapfig}
+
+% --- Math & Equations ---
+\usepackage{amsmath, amssymb, empheq}
+\usepackage{mathtools} % Optional (enhances amsmath)
+
+% --- Sections & Formatting ---
+\usepackage[Glenn]{fncychap}
+\usepackage{sectsty}
+\sectionfont{\Huge\color[HTML]{0067B3}}
+\subsectionfont{\Large\color[HTML]{AE0000}}
+\subsubsectionfont{\large\color[HTML]{123175}}
+
+% --- Tables ---
+\usepackage{caption, colortbl, booktabs}
+
+% --- Hyperlinks (load near the end) ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=violet,
+    urlcolor=red,
+}
+
+% --- Page Style & Footer ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\cfoot{\thepage}
+\lfoot{Project by \color[HTML]{AE0000}Aniruddha Sarkar}
+
+% --- Custom Commands ---
+\newcommand{\pmark}[1]{\begin{tikzpicture}[overlay,remember picture]\node(#1)at (-1em,.7ex){};\end{tikzpicture}}
+\newcommand{\smark}[1]{\begin{tikzpicture}[overlay,remember picture]\draw(#1)--(0,.7ex);\end{tikzpicture}}
+
+% --- Misc ---
+\setlength\parindent{0pt}

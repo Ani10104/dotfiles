@@ -1,0 +1,79 @@
+% ==========================================
+% Standalone Preamble File: preamble.tex
+% Contains all LaTeX configurations
+% ==========================================
+
+% --- Document Class & Basic Setup ---
+\usepackage[utf8]{inputenc}  % Essential for special characters
+\usepackage[T1]{fontenc}     % Better font encoding
+\usepackage[english]{babel}  % Language (e.g., 'spanish', 'german')
+\usepackage{amsmath, amssymb}  % Advanced math
+% \usepackage{siunitx}           % Units (\SI{10}{\meter})
+% \usepackage{chemformula}       % Chemical formulas (\ch{H2O})
+\usepackage{amsmath,empheq,amssymb,amsfonts,float,tikz,pgfplots,xcolor,graphicx,subfig}
+\usepackage{booktabs}          % Professional tables
+\usepackage{caption}           % Better figure captions
+\usepackage{hyperref}  
+\usepackage{geometry,fancyhdr}
+\usepackage{tikz}  
+\hypersetup{
+colorlinks=true,
+linkcolor=blue,
+filecolor=magenta,      
+urlcolor=cyan,
+pdftitle={Life Process Important Topics},
+pdfauthor={Aniruddha Sarkar}
+}
+\usepackage{xcolor}      % For custom colors
+\usepackage{titlesec}    % For section styling
+
+\usetikzlibrary{positioning,shapes,arrows}
+\usepackage{pgfpages}
+\usepackage{enumerate}
+\usepackage[Glenn]{fncychap}      % For custom colors
+
+\pgfpagesdeclarelayout{boxed}
+{
+	\edef\pgfpageoptionborder{0pt}
+}
+{
+	\pgfpagesphysicalpageoptions
+	{%
+		logical pages=1,%
+	}
+	\pgfpageslogicalpageoptions{1}
+	{
+		border code=\pgfsetlinewidth{2pt}\pgfstroke,%
+		border shrink=\pgfpageoptionborder,%
+		resized width=.90\pgfphysicalwidth,%
+		resized height=.90\pgfphysicalheight,%
+		center=\pgfpoint{.5\pgfphysicalwidth}{.5\pgfphysicalheight}%
+	}%
+}
+
+\pgfpagesuselayout{boxed}
+
+\geometry{ a4paper,
+	% total={170mm,257mm},
+	left=20mm,
+	top=20mm,
+	right=20mm,
+	bottom=3 mm
+}
+\titleformat{\section}         % Target sections
+{\normalfont\LARGE\bfseries\color[HTML]{FF5733}} % Format (size: \Large, \huge, etc.)
+{\thesection}                % Label (e.g., "1.2")
+{1em}                        % Horizontal separation
+{}                           % Before code (optional)
+[{\titlerule[1pt]}]          % After code (adds a rule below)
+
+\pagestyle{fancy}
+\cfoot{\thepage}
+\lfoot {Project by \color[HTML]{AE0000}Aniruddha Sarkar}
+
+
+\title{Life Process: Important Topics}
+\author{Aniruddha Sarkar}
+\date{\today}  % Or a fixed date
+
+\pgfplotsset{compat=1.18}

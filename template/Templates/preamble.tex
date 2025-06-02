@@ -1,0 +1,21 @@
+\usepackage{examduration}
+\usepackage{wrapfig}
+% \usepackage[realmainfile]{currfile}
+\usetikzlibrary{positioning}
+\pgfplotsset{compat=1.18}
+
+% --- Set up date and page geometry ---
+\setdatetoday
+\addtocounter{datenumber}{0}%
+\setdatebynumber{\thedatenumber}%
+\geometry{top=1.5cm, bottom=2cm, left=2cm, right=2cm}
+\setlength{\parindent}{0pt}
+
+% --- Load our exam duration macros ---
+\sloppy
+
+%\pointsinrightmargin
+\pointformat{\textbf {(\thepoints)}}
+
+\marksnotpoints
+\totalformat{Total: \totalpoints}

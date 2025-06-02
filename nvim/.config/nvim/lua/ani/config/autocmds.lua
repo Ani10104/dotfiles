@@ -27,13 +27,3 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "tex", "latex", "org" },
-  callback = function()
-    vim.lsp.start({
-      name = "harper-ls",
-      cmd = { "harper-ls", "--stdio" },
-      root_dir = vim.fn.getcwd(),
-    })
-  end,
-})
