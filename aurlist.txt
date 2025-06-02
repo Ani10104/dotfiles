@@ -1,0 +1,6 @@
+bibata-cursor-theme-bin 2.0.7-1
+checkupdates-with-aur 1.0-1
+ml4w-hyprland 2.9.8.6-1
+pokego-bin 0.3.0-1
+texlab-bin 5.22.1-1
+texpresso-git r279.49407cc-1
