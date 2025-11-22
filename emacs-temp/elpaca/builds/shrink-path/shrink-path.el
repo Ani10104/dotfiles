@@ -1,0 +1,1 @@
+/home/ani/.emacs.d/elpaca/repos/shrink-path/shrink-path.el

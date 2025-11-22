@@ -1,0 +1,108 @@
+* Emacs Configuration (Condensed)
+** Package Manager (Elpaca)
+#+begin_src emacs-lisp
+;; Load Elpaca package manager from external script
+(add-to-list 'load-path "~/.emacs.d/scripts/")
+(require 'elpaca-setup)
+#+end_src
+
+** Evil Mode (Vim Keybindings)
+#+begin_src emacs-lisp
+(use-package evil
+  :init
+  (setq evil-want-integration t
+        evil-want-keybinding nil
+        evil-vsplit-window-right t
+        evil-split-window-below t
+        evil-undo-system 'undo-redo)
+  :config
+  (evil-mode))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
+;; Fix org-mode RETURN key behavior with Evil
+(with-eval-after-load 'evil-maps
+  (define-key evil-motion-state-map (kbd "RET") nil))
+(setq org-return-follows-link t)
+#+end_src
+
+** Icons
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :ensure t
+  :if (display-graphic-p))
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t)))
+
+(use-package nerd-icons
+  :config
+  ;; Customize icon font if needed
+  ;;(setq nerd-icons-font-family "Symbols Nerd Font Mono")
+  )
+#+end_src
+
+** General Keybindings
+#+begin_src emacs-lisp
+(use-package general
+  :config
+  (general-evil-setup)
+  
+  ;; Set up SPC as global leader key
+  (general-create-definer dt/leader-keys
+    :states '(normal insert visual emacs)
+    :keymaps 'override
+    :prefix "SPC"
+    :global-prefix "M-SPC")
+
+  ;; Global keybindings
+  (dt/leader-keys
+    "SPC" '(counsel-M-x :wk "Counsel M-x")
+    "."   '(find-file :wk "Find file")
+    "="   '(perspective-map :wk "Perspective")
+    "TAB" '(comment-line :wk "Comment lines"))
+
+  ;; File operations
+  (dt/leader-keys
+    "f"   '(:ignore t :wk "Files")
+    "f c" '(find-file "~/.config/emacs/config.org" :wk "Open config")
+    "f r" '(counsel-recentf :wk "Recent files"))
+
+  ;; Buffer operations  
+  (dt/leader-keys
+    "b"   '(:ignore t :wk "Buffers")
+    "b b" '(switch-to-buffer :wk "Switch buffer")
+    "b k" '(kill-current-buffer :wk "Kill buffer"))
+
+  ;; Window management
+  (dt/leader-keys
+    "w"   '(:ignore t :wk "Windows")
+    "w c" '(evil-window-delete :wk "Close window")
+    "w s" '(evil-window-split :wk "Horizontal split")
+    "w v" '(evil-window-vsplit :wk "Vertical split"))
+)
+#+end_src
+
+** Doom Themes
+#+begin_src emacs-lisp
+;; Add custom themes directory
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+
+(use-package doom-themes
+  :config
+  ;; Theme customization
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  
+  ;; Load default theme
+  (load-theme 'doom-one t)
+  
+  ;; Neotree theming
+  (doom-themes-neotree-config)
+  
+  ;; Improved org-mode styling
+  (doom-themes-org-config))
+#+end_src

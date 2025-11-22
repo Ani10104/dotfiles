@@ -1,0 +1,1 @@
+/home/ani/.emacs.d/elpaca/repos/ivy-rich/ivy-rich.el

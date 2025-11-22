@@ -1,0 +1,89 @@
+
+% ==========================================
+% Main Preamble File: preamble.tex
+% Contains layout, formatting, and metadata
+% ==========================================
+
+% \input{packages} % Include all package imports
+
+% --- Page Geometry ---
+\geometry{
+    a4paper,
+    left=12mm,
+    top=20mm,
+    right=12mm,
+    bottom=30mm,
+    footskip=20mm
+}
+
+\definecolor{black}{RGB}{0,0,0} % Base colour
+\definecolor{flamingo}{HTML}{F45B2D} % Primary colour
+\definecolor{sirocco}{HTML}{627b7B} % Primary accent
+\definecolor{big-stone}{HTML}{37424A} % Secondary accent
+\definecolor{tower-gray}{HTML}{A9BDBF} %  Banner text colour
+\definecolor{mystic}{HTML}{E2EBED} % Specialised page background colour
+
+\definecolor{mymarroon}{HTML}{AE0000}
+ % Specialised page background colour
+% --- Section Title Format ---
+\definecolor{sectiongray}{gray}{0.85} % light gray background
+
+\titleformat{\section}
+  {\normalfont\LARGE\bfseries\color{mymarroon}}
+  {\thesection}
+  {0.7em}
+  {\underline}
+
+\renewcommand{\thesubsection}{\Alph{subsection}.}
+\titleformat{\subsection}
+  {\normalfont\Large\bfseries\color{sirocco}}
+  {\thesubsection}
+  {0.3em}
+  {\underline}
+
+
+% --- Page Style ---
+\addtolength{\topmargin}{.35in}
+\addtolength{\textheight}{-.45in}
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage}
+\lfoot{Project by \color{mymarroon}Aniruddha Sarkar}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\nouppercase{\rightmark}}
+
+% --- PGFPages Layout ---
+% \pgfpagesdeclarelayout{boxed}
+% {
+%   \edef\pgfpageoptionborder{0pt}
+% }
+% {
+%   \pgfpagesphysicalpageoptions{logical pages=1}
+%   \pgfpageslogicalpageoptions{1}{
+%     border code=\pgfsetlinewidth{2pt}\pgfstroke,
+%     border shrink=\pgfpageoptionborder,
+%     resized width=.90\pgfphysicalwidth,
+%     resized height=.90\pgfphysicalheight,
+%     center=\pgfpoint{.5\pgfphysicalwidth}{.5\pgfphysicalheight}
+%   }
+% }
+% \pgfpagesuselayout{boxed}
+
+% --- Document Metadata ---
+\title{Life Process: Important Topics}
+\author{Aniruddha Sarkar}
+\date{\today}
+
+% --- Typesetting Adjustments ---
+\sloppy
+\tolerance=2000
+\hbadness=2000
+\emergencystretch=2em
+
+
+
+\onehalfspacing
+
+\setlength{\columnsep}{1cm} % Default: 10pt (~3.5mm)
+\usepackage{ragged2e}
+\justifying

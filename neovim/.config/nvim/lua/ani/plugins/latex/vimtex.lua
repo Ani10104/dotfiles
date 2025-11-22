@@ -1,0 +1,52 @@
+return {
+  'lervag/vimtex',
+  event = { "BufReadPost", "BufNewFile" },
+
+  init = function()
+    -------------------------------------------------------------------
+    -- VIEWER (Wayland safe)
+    -------------------------------------------------------------------
+    -- You are on Hyprland (Wayland) → DO NOT use 'zathura'
+    -- because vimtex’s 'zathura' variant uses xdotool (X11 only)
+    vim.g.vimtex_view_method = 'zathura_simple'
+
+    -------------------------------------------------------------------
+    -- SyncTeX: Backward & Forward search
+    -------------------------------------------------------------------
+    -- -- Required for backward search (Zathura → Neovim)
+    -- vim.g.vimtex_callback_progname = 'nvr'
+
+    -------------------------------------------------------------------
+    -- General UI settings
+    -------------------------------------------------------------------
+    vim.g.vimtex_quickfix_mode = 0      -- Do not auto-open quickfix
+    vim.g.vimtex_mappings_enabled = 1   -- Enable VimTeX mappings
+    vim.g.vimtex_indent_enabled = 0     -- Disable auto-indent
+    vim.g.tex_flavor = 'latex'          -- Detect .tex files as LaTeX
+    vim.g.tex_indent_brace = 0          -- No brace auto-indent
+    vim.g.vimtex_context_pdf_viewer = 'okular' -- External viewer
+
+    -------------------------------------------------------------------
+    -- Ignore noisy warnings in :VimtexErrors
+    -------------------------------------------------------------------
+    vim.g.vimtex_log_ignore = {
+      'Underfull',
+      'Overfull',
+      'specifier changed to',
+      'Token not allowed in a PDF string',
+    }
+
+    -------------------------------------------------------------------
+    -- Compiler (Latexmk)
+    -- SyncTeX works with ANY engine as long as "-synctex=1" is here.
+    -------------------------------------------------------------------
+    vim.g.vimtex_compiler_latexmk = {
+      build_dir = 'Extra',
+      options = {
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+      },
+    }
+  end,
+}

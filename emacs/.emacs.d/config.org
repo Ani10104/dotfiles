@@ -1,0 +1,703 @@
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+TITLE: ANI's GNU Emacs Config
+#+AUTHOR: Aniruddha Sarkar (ANI)
+#+DESCRIPTION: ANI's personal Emacs config.
+#+STARTUP: showeverything
+#+OPTIONS: toc:2x
+
+* UTF-8 Things here
+#+begin_src emacs-lisp
+;; Force UTF-8 everywhere
+(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8)
+(setq locale-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+(setq default-buffer-file-coding-system 'utf-8)
+#+end_src
+
+* EVIL
+[[https://github.com/emacs-evil/evil][Evil]] is an extensible vi/vim layer for Emacs.  Because...let's face it.  The Vim keybindings are just plain better.
+
+#+begin_src emacs-lisp
+;; Expands to: (elpaca evil (use-package evil :demand t))
+(use-package evil
+  :init      ;; tweak evil's configuration before loading it
+  (setq evil-want-integration t  ;; This is optional since it's already set to t by default.
+	evil-want-keybinding nil
+	evil-vsplit-window-right t
+	evil-split-window-below t
+	evil-undo-system 'undo-redo)  ;; Adds vim-like C-r redo functionality
+  (evil-mode))
+
+(use-package evil-collection
+  :after evil
+  :config
+  ;; Do not uncomment this unless you want to specify each and every mode
+  ;; that evil-collection should works with.  The following line is here 
+  ;; for documentation purposes in case you need it.  
+  ;; (setq evil-collection-mode-list '(calendar dashboard dired ediff info magit ibuffer))
+  (add-to-list 'evil-collection-mode-list 'help) ;; evilify help mode
+  (evil-collection-init))
+
+(use-package evil-tutor)
+
+;; Using RETURN to follow links in Org/Evil 
+;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
+(with-eval-after-load 'evil-maps
+  (define-key evil-motion-state-map (kbd "SPC") nil)
+  (define-key evil-motion-state-map (kbd "RET") nil)
+  (define-key evil-motion-state-map (kbd "TAB") nil))
+;; Setting RETURN key in org-mode to follow links
+(setq org-return-follows-link  t)
+
+#+end_src
+
+* THEME
+The first line below designates the directory where will place all of our custom-made themes, which I have created only one (dtmacs).  You can create your own Emacs themes with the help of the [[https://emacsfodder.github.io/emacs-theme-editor/][Emacs Theme Editor]].  I am also installing =doom-themes= because it contains a huge collection of themes.  M-x load-theme will list all of the themes available.
+
+#+begin_src emacs-lisp
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+
+(use-package doom-themes
+  :config
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; Sets the default theme to load!!! 
+  (load-theme 'doom-dracula t)
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+#+end_src
+
+
+* ALL THE ICONS
+This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
+
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :ensure t
+  :if (display-graphic-p))
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
+#+end_src
+
+* BACKUP 
+By default, Emacs creates automatic backups of files in their original directories, such "file.el" and the backup "file.el~".  This leads to a lot of clutter, so let's tell Emacs to put all backups that it creates in the =TRASH= directory.
+
+#+begin_src emacs-lisp
+(setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
+
+#+end_src
+
+* COMPANY
+[[https://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for "complete anything".  Completion will start automatically after you type a few letters. Use M-n and M-p to select, <return> to complete or <tab> to complete the common part.
+
+#+begin_src emacs-lisp
+(use-package company
+  :defer 2
+  :diminish
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations 't)
+  (global-company-mode t))
+
+(use-package company-box
+  :after company
+  :diminish
+  :hook (company-mode . company-box-mode))
+#+end_src
+
+* DASHBOARD
+Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
+
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t 
+  :init
+  (setq initial-buffer-choice 'dashboard-open)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
+  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  (setq dashboard-startup-banner "~/.emacs.d/images/emacs-dash.png")  ;; use custom image as banner
+  (setq dashboard-center-content nil) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+			  (agenda . 5 )
+			  (bookmarks . 3)
+			  (projects . 3)))
+  :custom 
+  (dashboard-modify-heading-icons '((recents . "file-text")
+				    (bookmarks . "book")))
+  :config
+  (dashboard-setup-startup-hook))
+
+#+end_src
+
+* DIMINISH
+This package implements hiding or abbreviation of the modeline displays (lighters) of minor-modes.  With this package installed, you can add ':diminish' to any use-package block to hide that particular mode in the modeline.
+
+#+begin_src emacs-lisp
+(use-package diminish)
+
+#+end_src
+
+* DIRED
+#+begin_src emacs-lisp
+(use-package dired-open
+  :config
+  (setq dired-open-extensions '(("gif" . "sxiv")
+				("jpg" . "sxiv")
+				("png" . "sxiv")
+				("mkv" . "mpv")
+				("mp4" . "mpv"))))
+
+(use-package peep-dired
+  :after dired
+  :hook (evil-normalize-keymaps . peep-dired-hook)
+  :config
+  (evil-define-key 'normal dired-mode-map (kbd "h") 'dired-up-directory)
+  (evil-define-key 'normal dired-mode-map (kbd "l") 'dired-open-file) ; use dired-find-file instead if not using dired-open package
+  (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
+  (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file)
+  )
+
+#+end_src
+
+
+
+* GENERAL KEYBINDINGS
+
+#+begin_src emacs-lisp
+(use-package general
+  :config
+  (general-evil-setup)
+
+  ;; SPC leader keybindings
+  (general-create-definer ani/leader-keys
+    :states '(normal insert visual emacs)
+    :keymaps 'override
+    :prefix "SPC"
+    :global-prefix "M-SPC")
+
+  (ani/leader-keys
+    "SPC" '(counsel-M-x :wk "Counsel M-x")
+    "." '(find-file :wk "Find file")
+    "=" '(perspective-map :wk "Perspective")
+    "TAB TAB" '(comment-line :wk "Comment lines")
+    "u" '(universal-argument :wk "Universal argument"))
+
+  ;; Buffer/bookmark leader
+  (ani/leader-keys
+    "b" '(:ignore t :wk "Bookmarks/Buffers")
+    "b b" '(switch-to-buffer :wk "Switch to buffer")
+    "b c" '(clone-indirect-buffer :wk "Create indirect buffer copy in a split")
+    "b C" '(clone-indirect-buffer-other-window :wk "Clone indirect buffer in new window")
+    "b d" '(bookmark-delete :wk "Delete bookmark")
+    "b i" '(ibuffer :wk "Ibuffer")
+    "b k" '(kill-current-buffer :wk "Kill current buffer")
+    "b K" '(kill-some-buffers :wk "Kill multiple buffers")
+    "b l" '(list-bookmarks :wk "List bookmarks")
+    "b m" '(bookmark-set :wk "Set bookmark")
+    "b n" '(next-buffer :wk "Next buffer")
+    "b p" '(previous-buffer :wk "Previous buffer")
+    "b r" '(revert-buffer :wk "Reload buffer")
+    "b R" '(rename-buffer :wk "Rename buffer")
+    "b s" '(basic-save-buffer :wk "Save buffer")
+    "b S" '(save-some-buffers :wk "Save multiple buffers")
+    "b w" '(bookmark-save :wk "Save current bookmarks to bookmark file"))
+
+  ;; Org-mode specific leader bindings (comma ,)
+  (general-define-key
+   :states '(normal visual motion)
+   :keymaps 'org-mode-map
+   :prefix ","
+   :non-normal-prefix ","
+   ;; Navigation
+   "," 'org-next-visible-heading
+   "." 'org-previous-visible-heading
+   ;; TODO
+   "t" 'org-todo
+   ;; Scheduling
+   "d" 'org-deadline
+   "s" 'org-schedule
+   ;; Structure editing
+   "a" 'org-archive-subtree
+   "c" 'org-toggle-checkbox
+   "i" 'org-clock-in
+   "o" 'org-clock-out
+   ;; Capture
+   "x" 'org-capture
+   ;; Others
+   "r" 'org-refile
+   "p" 'org-set-property))
+#+end_src
+
+
+* SANE DEFAULTS
+The following settings are simple modes that are enabled (or disabled) so that Emacs functions more like you would expect a proper editor/IDE to function.
+
+#+begin_src emacs-lisp
+(delete-selection-mode 1)    ;; You can select text and delete it by typing.
+(electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
+(electric-pair-mode 1)       ;; Turns on automatic parens pairing
+;; The following prevents <> from auto-pairing when electric-pair-mode is on.
+;; Otherwise, org-tempo is broken when you try to <s TAB...
+(add-hook 'org-mode-hook (lambda ()
+			   (setq-local electric-pair-inhibit-predicate
+				       `(lambda (c)
+					  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+(global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
+(global-display-line-numbers-mode 1) ;; Display line numbers
+(global-visual-line-mode t)  ;; Enable truncated lines
+(menu-bar-mode -1)           ;; Disable the menu bar 
+(scroll-bar-mode -1)         ;; Disable the scroll bar
+(tool-bar-mode -1)           ;; Disable the tool bar
+(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
+(setq use-file-dialog nil)   ;; No file dialog
+(setq use-dialog-box nil)    ;; No dialog box
+(setq pop-up-windows nil)    ;; No popup windows
+#+end_src
+
+
+* HIGHLIGHT TODO
+Adding highlights to TODO and related words.
+
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :hook ((org-mode . hl-todo-mode)
+	 (prog-mode . hl-todo-mode))
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+	hl-todo-keyword-faces
+	`(("TODO"       warning bold)
+	  ("FIXME"      error bold)
+	  ("HACK"       font-lock-constant-face bold)
+	  ("REVIEW"     font-lock-keyword-face bold)
+	  ("NOTE"       success bold)
+	  ("DEPRECATED" font-lock-doc-face bold))))
+
+#+end_src
+
+* IVY (COUNSEL)
+  + Ivy, a generic completion mechanism for Emacs.
+  + Counsel, a collection of Ivy-enhanced versions of common Emacs commands.
+  + Ivy-rich allows us to add descriptions alongside the commands in M-x.
+
+    #+begin_src emacs-lisp
+    (use-package counsel
+      :after ivy
+      :diminish
+      :config 
+      (counsel-mode)
+      (setq ivy-initial-inputs-alist nil)) ;; removes starting ^ regex in M-x
+
+    (use-package ivy
+      :bind
+      ;; ivy-resume resumes the last Ivy-based completion.
+      (("C-c C-r" . ivy-resume)
+       ("C-x B" . ivy-switch-buffer-other-window))
+      :diminish
+      :custom
+      (setq ivy-use-virtual-buffers t)
+      (setq ivy-count-format "(%d/%d) ")
+      (setq enable-recursive-minibuffers t)
+      :config
+      (ivy-mode))
+
+    (use-package all-the-icons-ivy-rich
+      :ensure t
+      :init (all-the-icons-ivy-rich-mode 1))
+
+    (use-package ivy-rich
+      :after ivy
+      :ensure t
+      :init (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
+      :custom
+      (ivy-virtual-abbreviate 'full
+                              ivy-rich-switch-buffer-align-virtual-buffer t
+                              ivy-rich-path-style 'abbrev)
+      :config
+      (ivy-set-display-transformer 'ivy-switch-buffer
+                                   'ivy-rich-switch-buffer-transformer))
+
+    #+end_src
+
+* ORG MODE
+
+** Bullets
+=Org-bullets= gives us attractive bullets rather than asterisks.
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook 'org-indent-mode)
+(use-package org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
+
+** Diminish Org Indent Mode
+Removes "Ind" from showing in the modeline.
+
+#+begin_src emacs-lisp
+(eval-after-load 'org-indent '(diminish 'org-indent-mode))
+#+end_src
+
+** Org Level Headers
+
+#+begin_src emacs-lisp
+(custom-set-faces
+ '(org-level-1 ((t (:inherit outline-1 :height 1.7))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.6))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.5))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.4))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.3))))
+ '(org-level-6 ((t (:inherit outline-5 :height 1.2))))
+ '(org-level-7 ((t (:inherit outline-5 :height 1.1)))))
+#+end_src
+
+* Treemacs
+
+#+begin_src emacs-lisp
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+	  treemacs-deferred-git-apply-delay        0.5
+	  treemacs-directory-name-transformer      #'identity
+	  treemacs-display-in-side-window          t
+	  treemacs-eldoc-display                   'simple
+	  treemacs-file-event-delay                2000
+	  treemacs-file-extension-regex            treemacs-last-period-regex-value
+	  treemacs-file-follow-delay               0.2
+	  treemacs-file-name-transformer           #'identity
+	  treemacs-follow-after-init               t
+	  treemacs-expand-after-init               t
+	  treemacs-find-workspace-method           'find-for-file-or-pick-first
+	  treemacs-git-command-pipe                ""
+	  treemacs-goto-tag-strategy               'refetch-index
+	  treemacs-header-scroll-indicators        '(nil . "^^^^^^")
+	  treemacs-hide-dot-git-directory          t
+	  treemacs-indentation                     2
+	  treemacs-indentation-string              " "
+	  treemacs-is-never-other-window           nil
+	  treemacs-max-git-entries                 5000
+	  treemacs-missing-project-action          'ask
+	  treemacs-move-files-by-mouse-dragging    t
+	  treemacs-move-forward-on-expand          nil
+	  treemacs-no-png-images                   nil
+	  treemacs-no-delete-other-windows         t
+	  treemacs-project-follow-cleanup          nil
+	  treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+	  treemacs-position                        'left
+	  treemacs-read-string-input               'from-child-frame
+	  treemacs-recenter-distance               0.1
+	  treemacs-recenter-after-file-follow      nil
+	  treemacs-recenter-after-tag-follow       nil
+	  treemacs-recenter-after-project-jump     'always
+	  treemacs-recenter-after-project-expand   'on-distance
+	  treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+	  treemacs-project-follow-into-home        nil
+	  treemacs-show-cursor                     nil
+	  treemacs-show-hidden-files               t
+	  treemacs-silent-filewatch                nil
+	  treemacs-silent-refresh                  nil
+	  treemacs-sorting                         'alphabetic-asc
+	  treemacs-select-when-already-in-treemacs 'move-back
+	  treemacs-space-between-root-nodes        t
+	  treemacs-tag-follow-cleanup              t
+	  treemacs-tag-follow-delay                1.5
+	  treemacs-text-scale                      nil
+	  treemacs-user-mode-line-format           nil
+	  treemacs-user-header-line-format         nil
+	  treemacs-wide-toggle-width               70
+	  treemacs-width                           35
+	  treemacs-width-increment                 1
+	  treemacs-width-is-initially-locked       t
+	  treemacs-workspace-switch-cleanup        nil)
+
+    ;; The default width and height of the icons is 22 pixels.
+    ;; Uncomment if you use a HiDPI display.
+    ;; (treemacs-resize-icons 44)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode 'always)
+    (when treemacs-python-executable
+      (treemacs-git-commit-diff-mode t))
+
+    (let ((has-git (executable-find "git"))
+	  (has-python treemacs-python-executable))
+      (cond
+       ((and has-git has-python)
+	(treemacs-git-mode 'deferred))
+       (has-git
+	(treemacs-git-mode 'simple))))
+    (treemacs-hide-gitignored-files-mode nil))
+  :bind
+  (:map global-map
+	("M-0"       . treemacs-select-window)
+	("C-x t 1"   . treemacs-delete-other-windows)
+	("C-x t t"   . treemacs)
+	("C-x t d"   . treemacs-select-directory)
+	("C-x t B"   . treemacs-bookmark)
+	("C-x t C-t" . treemacs-find-file)
+	("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil
+  :after (treemacs evil)
+  :ensure t)
+
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once)
+  :ensure t)
+
+(use-package treemacs-magit
+  :after (treemacs magit)
+  :ensure t)
+
+(use-package treemacs-persp ;; Use `treemacs-perspective` if using `perspective.el`
+  :after (treemacs persp-mode)
+  :ensure t
+  :config (treemacs-set-scope-type 'Perspectives))
+
+(use-package treemacs-tab-bar ;; Use `treemacs-tab-bar` if using `tab-bar-mode`
+  :after (treemacs)
+  :ensure t
+  :config (treemacs-set-scope-type 'Tabs))
+
+;; Properly start treemacs on Emacs startup
+					; (add-hook 'emacs-startup-hook #'treemacs)
+#+end_src
+
+
+** Auctex For LaTex
+
+#+begin_src emacs-lisp
+(use-package auctex
+  :ensure t
+  :hook ((LaTeX-mode . turn-on-prettify-symbols-mode)
+	 (LaTeX-mode . turn-on-flyspell)))
+#+end_src
+
+
+#+begin_src emacs-lisp
+(global-auto-revert-mode 1)
+(setq auto-revert-verbose nil) ;; Quiet mode
+#+end_src
+
+* WHICH-KEY
+#+begin_src emacs-lisp
+(use-package which-key
+  :init
+  (which-key-mode 1)
+  :diminish
+  :config
+  (setq which-key-side-window-location 'bottom
+	which-key-sort-order #'which-key-key-order-alpha
+	which-key-allow-imprecise-window-fit nil
+	which-key-sort-uppercase-first nil
+	which-key-add-column-padding 1
+	which-key-max-display-columns nil
+	which-key-min-display-lines 6
+	which-key-side-window-slot -10
+	which-key-side-window-max-height 0.25
+	which-key-idle-delay 0.8
+	which-key-max-description-length 25
+	which-key-allow-imprecise-window-fit nil
+	which-key-separator " → " ))
+#+end_src
+
+
+* Visual Fill Column mode 
+
+
+#+begin_src emacs-lisp
+(use-package visual-fill-column
+  :ensure t
+  :hook(org-mode . visual-fill-column-mode)
+  :config
+  (setq visual-fill-column-width 140     ;; width of text body
+	visual-fill-column-center-text t)) ;; center with padding
+(defun my/zen-mode ()
+  "Toggle a minimalist writing setup."
+  (interactive)
+  (if (bound-and-true-p visual-fill-column-mode)
+      (progn
+	(visual-fill-column-mode -1)
+	(visual-line-mode -1)
+	(setq-local line-spacing nil))
+    (visual-line-mode 1)
+    (visual-fill-column-mode 1)
+    (setq-local line-spacing 0.2)))
+(global-set-key (kbd "<f9>") #'my/zen-mode)
+#+end_src
+
+** Org Mode LaTeX Export
+
+*** barebones Class.
+
+This is my barebones latex class.
+
+#+begin_src emacs-lisp
+;; Remove auto-generated \label{sec:orgxxxxxx} in LaTeX export
+(with-eval-after-load 'ox
+  (defun my-latex-filter-removeOrgAutoLabels (text backend info)
+    "Remove Org-generated labels like \\label{sec:org123abc} from LaTeX output."
+    (when (org-export-derived-backend-p backend 'latex)
+      (replace-regexp-in-string "\\\\label{sec:org[0-9a-f]+}\\(?:\n\\)?" "" text)))
+
+  (add-to-list 'org-export-filter-headline-functions
+	       #'my-latex-filter-removeOrgAutoLabels))
+
+
+(setq org-export-headline-levels 5)
+(setq org-latex-default-packages-alist nil)
+(setq org-latex-hyperref-template "")
+
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+	       '("barebones"
+		 "\\documentclass{report}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]"
+		 ("\\chapter{%s}" . "\\chapter*{%s}")
+		 ("\\section{%s}" . "\\section*{%s}")
+		 ("\\subsection{%s}" . "\\subsection*{%s}"))))
+
+(with-eval-after-load 'ox
+  (defun my-latex-filter-removeOrgAutoLabels (text backend info)
+    (when (org-export-derived-backend-p backend 'latex)
+      (replace-regexp-in-string "\\\\label{sec:org[0-9a-f]+}\\(?:\n\\)?" "" text)))
+  (add-to-list 'org-export-filter-headline-functions
+	       #'my-latex-filter-removeOrgAutoLabels))
+#+end_src
+
+
+** Question Class.
+
+This is my barebones latex class.
+
+#+begin_src emacs-lisp
+(setq org-export-headline-levels 5)
+(setq org-latex-default-packages-alist nil)
+(setq org-latex-hyperref-template "")
+
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+	       '("question"
+		 "\\documentclass{report}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]"
+		 ("\\examsection{%s}" . "\\examsection*{%s}")
+		 ("\\question \\textbf{\\Large %s} \\hfill \\totalpoints" . "\\question* \\textbf{\\Large %s} \\hfill 
+\\totalpoints")
+		 ("\\part[%s]" . "\\part[%s]"))))
+(with-eval-after-load 'ox
+  (defun my-latex-filter-removeOrgAutoLabels (text backend info)
+    (when (org-export-derived-backend-p backend 'latex)
+      (replace-regexp-in-string "\\\\label{sec:org[0-9a-f]+}\\(?:\n\\)?" "" text)))
+  (add-to-list 'org-export-filter-headline-functions
+	       #'my-latex-filter-removeOrgAutoLabels))
+#+end_src
+
+** My custom Org Class.
+#+begin_src emacs-lisp
+(defun my/create-org-template ()
+  "Prompt for template type and filename, then create an Org file with appropriate headings."
+  (interactive)
+  (let* ((template-type (completing-read "Choose template type: " '("question" "article")))
+	 (filename (read-string "Enter filename (without .org extension): "))
+	 (latex-class (cond ((string= template-type "question") "question")
+			    ((string= template-type "article") "barebones")
+			    (t "article")))
+	 (filepath (concat filename ".org")))
+
+    (find-file filepath)
+    (insert "#+LaTeX_CLASS: " latex-class "\n\n")
+    (when (string= template-type "question")
+      (insert "* Question\n\n"))
+    (when (string= template-type "article")
+      (insert "* \n\n** Introduction\n\n** Methods\n\n** Results\n\n** Discussion\n\n"))
+    (save-buffer)
+    (message "Created %s with %s template" filepath template-type)))
+
+(global-set-key (kbd "C-c t") 'my/create-org-template)
+#+end_src
+
+    
+** Modeline
+#+begin_src emacs-lisp
+(use-package nerd-icons
+  :custom
+  ;; The Nerd Font you want to use in GUI
+  ;; "Symbols Nerd Font Mono" is the default and is recommended
+  ;; but you can use any other Nerd Font if you want
+  (nerd-icons-font-family "Symbols Nerd Font Mono")
+  )
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 2)
+  :config
+  (setq doom-modeline-height 30      ;; sets modeline height
+	doom-modeline-bar-width 5    ;; sets right bar width
+	doom-modeline-persp-name t   ;; adds perspective name to modeline
+	doom-modeline-persp-icon t)) ;; adds folder icon next to persp name
+#+end_src
+
+
+
+#+begin_src emacs-lisp
+;; Core Evil
+
+;; Surround text objects
+(use-package evil-surround
+  :after evil
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+
+;; Comment/uncomment lines
+(use-package evil-commentary
+  :after evil
+  :ensure t
+  :config
+  (evil-commentary-mode))
+
+;; Text objects and motions
+(use-package evil-args
+  :after evil
+  :ensure t)
+(use-package evil-indent-plus
+  :after evil
+  :ensure t)
+(use-package evil-matchit
+  :after evil
+  :ensure t)
+(use-package evil-numbers
+  :after evil
+  :ensure t)
+(use-package evil-textobj-line
+  :after evil
+  :ensure t)
+(use-package evil-textobj-tree-sitter
+  :after (evil tree-sitter)
+  :ensure t)
+(use-package evil-escape
+  :after evil
+  :ensure t
+  :config
+  (evil-escape-mode 1))
+#+end_src

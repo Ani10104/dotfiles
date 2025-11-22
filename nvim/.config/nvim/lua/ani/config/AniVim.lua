@@ -16,7 +16,7 @@ AniVim = {
 	-- 	= kanagawa       --
 	-- 	= gruvbox        --
 	---------------------------
-	colorscheme = "catppuccin",
+	colorscheme = "kanagawa",
 	ui = {
 		font = { "FiraCode Nerd Font", ":h14" },
 		float = {

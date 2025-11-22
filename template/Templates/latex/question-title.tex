@@ -1,0 +1,27 @@
+% Define keys
+\makeatletter
+\define@key{exam}{class}{\def\classname{#1}}
+\define@key{exam}{title}{\def\examtitle{#1}}
+
+% Command to set values
+\newcommand{\setexam}[1]{\setkeys{exam}{#1}}
+\makeatother
+
+% Default values (optional)
+\setexam{
+class=Subject (Class -- something),
+title=Paper name,
+}
+
+% Usage in title
+\title{%
+\vspace{-1.5cm}%
+{\huge\textbf{\examtitle}}\\[2mm]%
+{\LARGE \classname}\\[2mm]%
+{Date: {\datedate}}\\[3mm]%
+{\large Full Marks:\numpoints \hfill Time: \examduration}%
+\vspace{3pt}%
+\hrule\vspace{-2em}%
+}
+\author{}
+\date{}

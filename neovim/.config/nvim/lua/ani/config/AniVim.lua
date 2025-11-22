@@ -1,0 +1,70 @@
+------------------------------------------------
+--                                            --
+--    This is a main configuration file for   --
+--                    AniVim                  --
+--      Change variables which you need to    --
+--                                            --
+------------------------------------------------
+
+local icons = require("lib.icons")
+
+AniVim = {
+	---------------------------
+	-- colorchemes available --
+	-- 	= catpuccin      --
+	-- 	= tokyonight     --
+	-- 	= kanagawa       --
+	-- 	= gruvbox        --
+	---------------------------
+	colorscheme = "kanagawa",
+
+-- 🔥 List all plugin import modules here
+	plugin_list = {
+		"ani.plugins",     -- main
+		"ani.plugins.editor",  -- AI-related
+		"ani.plugins.ui",  -- UI enhancements
+		"ani.plugins.lsp", -- LSP setup
+		"ani.plugins.tools",
+		"ani.plugins.latex",     -- LaTex
+	},
+	ui = {
+		font = { "FiraCode Nerd Font", ":h14" },
+		float = {
+			border = "rounded",
+		},
+	},
+	plugins = {
+		-- Make sure to reload nvim & "Update Plugins" after change
+		ai = {
+			codecompanion = {
+				enabled = true,
+			},
+			copilot = {
+				enabled = true,
+			},
+		},
+		completion = {
+			select_first_on_enter = false,
+		},
+		-- Completely replaces the UI for messages, cmdline and the popupmenu
+		experimental_noice = {
+			enabled = true,
+		},
+		-- Enables moving by subwords and skips significant punctuation with w, e, b motions
+		jump_by_subwords = {
+			enabled = false,
+		},
+		rooter = {
+			-- Removing package.json from list in Monorepo Frontend Project can be helpful
+			-- By that your live_grep will work related to whole project, not specific package
+			patterns = { ".git", "package.json", "_darcs", ".bzr", ".svn", "Makefile" }, -- Default
+		},
+	},
+	-- Please keep it
+	icons = icons,
+	-- Statusline configuration
+	statusline = {
+		path_enabled = false,
+		path = "relative", -- absolute/relative
+	},
+}

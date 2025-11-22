@@ -6,7 +6,7 @@ return {
 		vim.g['vimtex_quickfix_mode'] = 1 -- suppress error reporting on save and build
 		vim.g['vimtex_mappings_enabled'] = 1 -- Ignore mappings
 		vim.g['vimtex_indent_enabled'] = 0 -- Auto Indent
-		vim.g['vimtex_fold_enabled'] = 1
+		-- vim.g['vimtex_fold_enabled'] = 1
 		vim.g['tex_flavor'] = 'latex' -- how to read tex files
 		-- vim.g['tex_indent_items'] = 0 -- turn off enumerate indent
 		vim.g['tex_indent_brace'] = 0 -- turn off brace indent
