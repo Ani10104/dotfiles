@@ -1,52 +1,59 @@
 return {
-  'lervag/vimtex',
-  event = { "BufReadPost", "BufNewFile" },
+	"lervag/vimtex",
+	event = "BufReadPost",
+	init = function()
+		-- Viewer settings
+		vim.g.vimtex_view_method = "sioyek" -- Sioyek PDF viewer for academic documents
+		-- Note: Not setting vimtex_view_sioyek_options allows VimTeX to handle window management
+		-- It will open new windows when needed but reuse for the same document
+		vim.g.vimtex_context_pdf_viewer = "okular" -- External PDF viewer for the Vimtex menu
 
-  init = function()
-    -------------------------------------------------------------------
-    -- VIEWER (Wayland safe)
-    -------------------------------------------------------------------
-    -- You are on Hyprland (Wayland) → DO NOT use 'zathura'
-    -- because vimtex’s 'zathura' variant uses xdotool (X11 only)
-    vim.g.vimtex_view_method = 'zathura_simple'
+		-- Formatting settings
+		-- vim.g.vimtex_format_enabled = true             -- Enable formatting with latexindent
+		-- vim.g.vimtex_format_program = 'latexindent'
 
-    -------------------------------------------------------------------
-    -- SyncTeX: Backward & Forward search
-    -------------------------------------------------------------------
-    -- -- Required for backward search (Zathura → Neovim)
-    -- vim.g.vimtex_callback_progname = 'nvr'
+		-- Indentation settings
+		vim.g.vimtex_indent_enabled = false -- Disable auto-indent from Vimtex
+		vim.g.tex_indent_items = false -- Disable indent for enumerate
+		vim.g.tex_indent_brace = false -- Disable brace indent
 
-    -------------------------------------------------------------------
-    -- General UI settings
-    -------------------------------------------------------------------
-    vim.g.vimtex_quickfix_mode = 0      -- Do not auto-open quickfix
-    vim.g.vimtex_mappings_enabled = 1   -- Enable VimTeX mappings
-    vim.g.vimtex_indent_enabled = 0     -- Disable auto-indent
-    vim.g.tex_flavor = 'latex'          -- Detect .tex files as LaTeX
-    vim.g.tex_indent_brace = 0          -- No brace auto-indent
-    vim.g.vimtex_context_pdf_viewer = 'okular' -- External viewer
+		-- Compiler settings
+		vim.g.vimtex_compiler_method = "latexmk" -- Explicit compiler backend selection
+		vim.g.vimtex_compiler_latexmk = { -- latexmk configuration
+			build_dir = "build", -- Build artifacts directory
+			options = {
+				"-pdf", -- Use XeLaTeX engine
+				"-interaction=nonstopmode", -- Don't stop on errors
+				"-file-line-error", -- Better error messages
+				"-synctex=1", -- Enable SyncTeX
+			},
+		}
 
-    -------------------------------------------------------------------
-    -- Ignore noisy warnings in :VimtexErrors
-    -------------------------------------------------------------------
-    vim.g.vimtex_log_ignore = {
-      'Underfull',
-      'Overfull',
-      'specifier changed to',
-      'Token not allowed in a PDF string',
-    }
+		-- Quickfix settings
+		vim.g.vimtex_quickfix_mode = 0 -- Open quickfix window on errors (2 = auto-close when empty)
+		vim.g.vimtex_quickfix_ignore_filters = { -- Filter out common noise
+			"Underfull",
+			"Overfull",
+			"specifier changed to",
+			"Token not allowed in a PDF string",
+			"Package hyperref Warning",
+		}
+		vim.g.vimtex_log_ignore = { -- Suppress specific log messages
+			"Underfull",
+			"Overfull",
+			"specifier changed to",
+			"Token not allowed in a PDF string",
+		}
 
-    -------------------------------------------------------------------
-    -- Compiler (Latexmk)
-    -- SyncTeX works with ANY engine as long as "-synctex=1" is here.
-    -------------------------------------------------------------------
-    vim.g.vimtex_compiler_latexmk = {
-      build_dir = 'Extra',
-      options = {
-        "-synctex=1",
-        "-interaction=nonstopmode",
-        "-file-line-error",
-      },
-    }
-  end,
+		-- Other settings
+		vim.g.vimtex_mappings_enabled = true
+
+		vim.g.vimtex_mappings_disable = {
+			n = {
+				"<localleader>ll",
+				"<localleader>lv",
+			},
+		}
+		vim.g.tex_flavor = "latex" -- Set file type for TeX files
+	end,
 }

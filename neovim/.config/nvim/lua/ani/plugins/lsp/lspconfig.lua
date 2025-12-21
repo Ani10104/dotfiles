@@ -32,6 +32,13 @@ return {
 					build = { onSave = true },
 					chktex = { onEdit = false, onOpenAndSave = false },
 					diagnosticsDelay = 300,
+					diagnostics = {
+						-- only diagnostics that do NOT match any ignoredPattern are sent
+						ignoredPatterns = {
+							"Underfull \\\\hbox", -- match Underfull \hbox warnings
+							"Overfull \\\\hbox", -- optional: also ignore overfull
+						},
+					},
 				},
 			},
 		})
@@ -53,5 +60,26 @@ return {
 			},
 		})
 		vim.lsp.enable("lua_ls")
+
+		-- LTeX (LanguageTool) inline diagnostics
+		vim.lsp.config("ltex", {
+			cmd = { "ltex-ls" },
+			filetypes = { "tex", "plaintex", "latex" },
+			settings = {
+				ltex = {
+					language = "en-US",
+					diagnosticSeverity = "warning",
+					additionalRules = { enablePickyRules = true },
+				},
+			},
+		})
+		vim.lsp.enable("ltex")
+
+		vim.lsp.config("tinymist", {
+			settings = {
+				openLink = "never",
+			},
+		})
+		vim.lsp.enable("tinymist")
 	end,
 }

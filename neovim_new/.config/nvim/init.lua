@@ -1,0 +1,5 @@
+require("AniVim")
+require("ani.config")
+require("ani.config.keymaps.apply")
+require("ani.lazy")
+require("ani.config.theme").apply()
