@@ -22,7 +22,7 @@ require("lazy").setup({
 	install = { colorscheme = { AniVim.colorscheme } },
 
 	defaults = {
-		lazy = false, -- 🚀 lazy-load everything by default!
+		-- lazy = true, -- 🚀 lazy-load everything by default!
 		version = false,
 	},
 

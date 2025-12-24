@@ -20,6 +20,9 @@ return {
 				ft = "git",
 			},
 		},
+		defaults = {
+			enabled = false,
+		},
 		bigfile = { enabled = AniVim.snacks_enabled(AniVim.snacks_module.bigfile), notify = true },
 		lazygit = { enabled = AniVim.snacks_enabled(AniVim.snacks_module.lazygit) },
 		dashboard = {
@@ -42,11 +45,11 @@ return {
 			expand = true,
 		},
 		picker = {
-			enabled = false,
+			enabled = true,
 			open = {
 				split = "right",
 			},
-			layout = "custom1",
+			layout = "vertical2",
 			layouts = layouts,
 			hidden = true, -- Show hidden files by default
 			ignored = true, -- Show ignored files by default
@@ -61,6 +64,9 @@ return {
 					layout = "custom1",
 				},
 
+				notifications = {
+					layout = "default",
+				},
 				explorer = {
 					layout = { preset = "default", preview = false },
 					-- layout = "default",
@@ -94,7 +100,7 @@ return {
 			},
 		},
 		explorer = {
-			enabled = true,
+			enabled = false,
 		},
 		notifier = {
 			enabled = true,
@@ -130,7 +136,7 @@ return {
 			},
 			refresh = 50,
 		},
-		words = { enabled = false },
+		words = { enabled = true },
 		zen = {
 			enabled = false,
 			toggles = {

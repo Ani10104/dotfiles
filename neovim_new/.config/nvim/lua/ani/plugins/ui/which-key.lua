@@ -54,10 +54,12 @@ return {
 	config = function(_, opts)
 		local wk = require("which-key")
 		wk.setup(opts.setup)
+
 		-- ==========================================================
 		-- Inline adapter: spec.lua → which-key
 		-- ==========================================================
 		-- lua/ani/keymaps/whichkey.lua
+		-- ==========================================================
 
 		local spec = require("ani.config.keymaps.spec")
 

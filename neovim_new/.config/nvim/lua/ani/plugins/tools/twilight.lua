@@ -1,6 +1,7 @@
 -- Lua
 return {
 	"folke/twilight.nvim",
+	-- lazy = true,
 	event = "BufReadPost",
 	opts = {
 		dimming = {

@@ -125,4 +125,25 @@ M.explorertheme = {
 	},
 }
 
+----------------------------------------------------------------------------
+-- Vertical custom layout
+----------------------------------------------------------------------------
+M.vertical2 = {
+	layout = {
+		backdrop = false,
+		width = 0.5,
+		preview = "none",
+		min_width = 80,
+		height = 0.8,
+		min_height = 30,
+		box = "vertical",
+		border = true,
+		title = "{title} {live} {flags}",
+		title_pos = "center",
+		{ win = "input", height = 1, border = "bottom" },
+		{ win = "list", border = "none" },
+		-- { win = "preview", title = "{preview}", height = 0.8, border = "top" },
+	},
+}
+
 return M

@@ -3,13 +3,11 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	build = ":TSUpdate",
 	dependencies = {
-		-- "nvim-treesitter/nvim-treesitter-textobjects",
 		"JoosepAlviste/nvim-ts-context-commentstring",
 		"windwp/nvim-ts-autotag",
-		-- "nvim-treesitter/nvim-treesitter-textobjects",
 	},
 	config = function()
-		require("nvim-treesitter.configs").setup({
+		require("nvim-treesitter").setup({
 			-- enable syntax highlighting
 			highlight = {
 				enable = true,
@@ -34,7 +32,7 @@ return {
 				-- "javascript",
 				-- "typescript",
 				-- "tsx",
-				"css",
+				-- "css",
 				-- "prisma",
 				-- "markdown",
 				-- "markdown_inline",

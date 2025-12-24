@@ -30,6 +30,10 @@ return {
 			----------------------------------------------------------------
 			snippets = {
 				preset = "luasnip",
+
+				ghost_text = {
+					enabled = false,
+				},
 				expand = function(snippet)
 					luasnip.lsp_expand(snippet)
 				end,

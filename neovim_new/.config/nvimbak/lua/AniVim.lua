@@ -34,13 +34,13 @@ AniVim = {
 		"ani.plugins.tools",
 		"ani.plugins.latex",
 
-		--Mini Plugins
-		"ani.plugins.mini.mini_ai",
-		"ani.plugins.mini.mini_tabline",
-		"ani.plugins.mini.mini_statusline",
-		"ani.plugins.mini.mini_surround",
-		"ani.plugins.mini.mini_operators",
-		"ani.plugins.mini.mini_pairs",
+		-- --Mini Plugins
+		-- "ani.plugins.mini.mini_ai",
+		-- "ani.plugins.mini.mini_tabline",
+		-- "ani.plugins.mini.mini_statusline",
+		-- "ani.plugins.mini.mini_surround",
+		-- "ani.plugins.mini.mini_operators",
+		-- "ani.plugins.mini.mini_pairs",
 		-- "ani.plugins.mini.mini_sessions",
 	},
 

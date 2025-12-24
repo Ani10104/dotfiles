@@ -8,10 +8,6 @@ vim.g.tex_conceal = "" -- disable VimTeX default conceal to avoid conflicts
 vim.o.relativenumber = true
 vim.opt.swapfile = false
 vim.o.winborder = AniVim.ui.float.border
-vim.opt.shiftwidth = 4
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.expandtab = true
 
 vim.opt.inccommand = "nosplit"
 vim.o.autoread = true
