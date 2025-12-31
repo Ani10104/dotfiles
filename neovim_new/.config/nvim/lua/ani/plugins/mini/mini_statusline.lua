@@ -1,6 +1,6 @@
 return {
 	"nvim-mini/mini.statusline",
-	event = "BufReadPost",
+	-- event = "BufReadPost",
 	version = "*",
 	config = function()
 		-- require("mini.ai").setup()

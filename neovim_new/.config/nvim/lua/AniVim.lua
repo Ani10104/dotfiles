@@ -13,15 +13,15 @@ local icons = require("lib.icons")
 
 AniVim = {
 	-- Available themes
-	colorscheme = "kanagawa-wave",
+	colorscheme = "tokyonight-night",
 
 	themes = {
-		"gruvbox",
+		-- "gruvbox",
 		"tokyonight",
 		"catppuccin",
-		"kanagawa",
-		"rose-pine",
-		"sonokai",
+		-- "kanagawa",
+		-- "rose-pine",
+		-- "sonokai",
 		-- "everforest",
 		-- "nightfox",
 	},
@@ -41,6 +41,8 @@ AniVim = {
 		"ani.plugins.mini.mini_surround",
 		"ani.plugins.mini.mini_operators",
 		"ani.plugins.mini.mini_pairs",
+		"ani.plugins.mini.mini_comment",
+		"ani.plugins.mini.mini_cursorword",
 		-- "ani.plugins.mini.mini_sessions",
 	},
 

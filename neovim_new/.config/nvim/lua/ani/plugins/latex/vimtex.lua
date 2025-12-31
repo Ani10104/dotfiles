@@ -1,76 +1,53 @@
 return {
 	"lervag/vimtex",
-	event = "BufReadPost",
-
 	init = function()
-		------------------------------------------------------------
-		-- Filetype
-		------------------------------------------------------------
-		vim.g.tex_flavor = "latex"
+		-- Viewer settings
+		vim.g.vimtex_view_method = "sioyek" -- Sioyek PDF viewer for academic documents
+		-- Note: Not setting vimtex_view_sioyek_options allows VimTeX to handle window management
+		-- It will open new windows when needed but reuse for the same document
+		vim.g.vimtex_context_pdf_viewer = "okular" -- External PDF viewer for the Vimtex menu
 
-		------------------------------------------------------------
-		-- COMPLETION (CRITICAL for blink.cmp)
-		------------------------------------------------------------
-		vim.g.vimtex_complete_enabled = 1
-		vim.g.vimtex_complete_close_braces = 1
-		vim.g.vimtex_complete_ignore_case = 1
-		vim.g.vimtex_complete_smart_case = 1
+		-- Formatting settings
+		-- vim.g.vimtex_format_enabled = true             -- Enable formatting with latexindent
+		-- vim.g.vimtex_format_program = 'latexindent'
 
-		------------------------------------------------------------
-		-- Viewer
-		------------------------------------------------------------
-		vim.g.vimtex_view_method = "sioyek"
-		vim.g.vimtex_context_pdf_viewer = "okular"
+		-- Indentation settings
+		vim.g.vimtex_indent_enabled = false -- Disable auto-indent from Vimtex
+		vim.g.tex_indent_items = false -- Disable indent for enumerate
+		vim.g.tex_indent_brace = false -- Disable brace indent
 
-		------------------------------------------------------------
-		-- Compiler
-		------------------------------------------------------------
-		vim.g.vimtex_compiler_method = "latexmk"
-		vim.g.vimtex_compiler_latexmk = {
-			build_dir = "build",
+		-- Compiler settings
+		vim.g.vimtex_compiler_method = "latexmk" -- Explicit compiler backend selection
+		vim.g.vimtex_compiler_latexmk = { -- latexmk configuration
+			build_dir = "build", -- Build artifacts directory
+			-- out_dir = "build", -- Output directory for PDF and aux files
+			-- aux_dir = "build", -- Auxiliary files directory
 			options = {
-				"-pdf",
-				"-interaction=nonstopmode",
-				"-file-line-error",
-				"-synctex=1",
+				"-pdf", -- Use XeLaTeX engine
+				"-interaction=nonstopmode", -- Don't stop on errors
+				"-file-line-error", -- Better error messages
+				"-synctex=1", -- Enable SyncTeX
 			},
 		}
 
-		------------------------------------------------------------
-		-- Indentation (disabled, as you prefer)
-		------------------------------------------------------------
-		vim.g.vimtex_indent_enabled = false
-		vim.g.tex_indent_items = false
-		vim.g.tex_indent_brace = false
-
-		------------------------------------------------------------
-		-- Quickfix / logs (noise reduction)
-		------------------------------------------------------------
-		vim.g.vimtex_quickfix_mode = 0
-		vim.g.vimtex_quickfix_ignore_filters = {
+		-- Quickfix settings
+		vim.g.vimtex_quickfix_mode = 0 -- Open quickfix window on errors (2 = auto-close when empty)
+		vim.g.vimtex_quickfix_ignore_filters = { -- Filter out common noise
 			"Underfull",
 			"Overfull",
 			"specifier changed to",
 			"Token not allowed in a PDF string",
 			"Package hyperref Warning",
 		}
-
-		vim.g.vimtex_log_ignore = {
+		vim.g.vimtex_log_ignore = { -- Suppress specific log messages
 			"Underfull",
 			"Overfull",
 			"specifier changed to",
 			"Token not allowed in a PDF string",
 		}
 
-		------------------------------------------------------------
-		-- Mappings
-		------------------------------------------------------------
-		vim.g.vimtex_mappings_enabled = true
-		vim.g.vimtex_mappings_disable = {
-			n = {
-				"<localleader>ll",
-				"<localleader>lv",
-			},
-		}
+		-- Other settings
+		vim.g.vimtex_mappings_enabled = false -- Disable default mappings
+		vim.g.tex_flavor = "latex" -- Set file type for TeX files
 	end,
 }
